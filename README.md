@@ -1,15 +1,34 @@
-# learn.forge.viewmodels
+# Two-Legged Authentication sample
 
-# Description
+[![Node.js](https://img.shields.io/badge/Node.js-8.11.1-blue.svg)](https://nodejs.org/)
+[![npm](https://img.shields.io/badge/npm-6.1.0-blue.svg)](https://www.npmjs.com/)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://opensource.org/licenses/MIT)
 
-This sample is part of the [Learn Forge](http://learnforge.autodesk.io) tutorials.
+[![oAuth2](https://img.shields.io/badge/oAuth2-v1-green.svg)](https://forge.autodesk.com/)
 
-### Languages
+## Description
+This sample illustrates the Two-Legged Authentication workflow:
+- Run a simple web server
+- Create a Two-Legged Authentication access token to be used throughout the app
 
-The `master` branch contains the client-side UI: `html`, `js` and `css` files. To download the project for each language, please use:
+## Setup & Run
+1. Setup
+   - Install `npm` (if you haven't already).
+   - Install `npm` packages using the command `npm install`.
+     - Make sure that the current directory contains `package.json`.
+   - Ensure that in your hosts file you have mapped:
+     - `127.0.0.1 localhost`
+   - Replace the `FORGE_CLIENT_ID` and `FORGE_CLIENT_SECRET` variable values in `start.js` with your Forge credentials.
 
-- [Nodejs](//github.com/Autodesk-Forge/learn.forge.viewmodels/tree/nodejs)
-- [.NET](//github.com/Autodesk-Forge/learn.forge.viewmodels/tree/net)
-- [Go](//github.com/Autodesk-Forge/learn.forge.viewmodels/tree/go)
-- [PHP](//github.com/Autodesk-Forge/learn.forge.viewmodels/tree/php)
-- [Java](//github.com/Autodesk-Forge/learn.forge.viewmodels/tree/java)
+2. Execute `node start.js`
+   - The node server will listen on on port `5000`.
+
+3. Open a browser and navigate to `http://localhost:5000/`.
+
+4. Click on the `Authorize me` link and login to your Autodesk account.
+   - In your console, you should see `Server listening on port 5000`.
+   - In the browser, you should see a token string.
+   - That's it!
+
+### Thumbnail
+![thumbnail](/thumbnail.png)

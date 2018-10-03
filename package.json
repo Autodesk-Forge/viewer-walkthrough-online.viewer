@@ -1,0 +1,27 @@
+{
+  "name": "learn.2legged.auth",
+  "version": "1.0.0",
+  "description": "Learn Two-Legged Authentication",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "2-legged",
+    "auth",
+    "app",
+    "web",
+    "tutorial",
+    "sample"
+  ],
+  "author": "Andrews Ang",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.0.1"
+  }
+}
