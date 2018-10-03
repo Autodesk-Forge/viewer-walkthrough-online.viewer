@@ -40,8 +40,8 @@ var server = app.listen(app.get('port'), function () {
 // Initialize the 2-legged OAuth2 client, set specific scopes and
 // set the token to auto refresh
 //-------------------------------------------------------------------
-var CLIENT_ID = '<REPLACE_WITH_FORGE_CLIENT_ID>';
-var CLIENT_SECRET = '<REPLACE_WITH_FORGE_CLIENT_SECRET>';
+var FORGE_CLIENT_ID = '<REPLACE_WITH_FORGE_CLIENT_ID>';
+var FORGE_CLIENT_SECRET = '<REPLACE_WITH_FORGE_CLIENT_SECRET>';
 var access_token = '';
 var scopes = ['data:read'];
 const querystring = require('querystring');
@@ -55,8 +55,8 @@ app.get('/auth', function (req, res) {
             'content-type': 'application/x-www-form-urlencoded',
         },
         data: querystring.stringify({
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
+            client_id: FORGE_CLIENT_ID,
+            client_secret: FORGE_CLIENT_SECRET,
             grant_type: 'client_credentials',
             scope: scopes
         })
