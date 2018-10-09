@@ -43,7 +43,7 @@ var server = app.listen(app.get('port'), function () {
 var FORGE_CLIENT_ID = '<REPLACE_WITH_FORGE_CLIENT_ID>';
 var FORGE_CLIENT_SECRET = '<REPLACE_WITH_FORGE_CLIENT_SECRET>';
 var access_token = '';
-var scopes = ['data:read'];
+var scopes = 'data:read';
 const querystring = require('querystring');
 
 // // Route /auth
