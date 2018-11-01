@@ -102,6 +102,7 @@ app.get('/api/forge/oauth/public', function (req, res) {
         });
 });
 
+// Buckey key and Policy Key for OSS
 const bucketKey = FORGE_CLIENT_ID.toLowerCase() + '_tutorial_bucket'; // Prefix with your ID so the bucket key is unique across all buckets on all other accounts
 const policyKey = 'transient'; // Expires in 24hr
 
