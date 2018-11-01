@@ -31,13 +31,16 @@
         var viewerApp;
         var options = {
             env: 'AutodeskProduction',
+            api: 'derivativeV2', // TODO: for models uploaded to EMEA change this option to 'derivativeV2_EU'
             getAccessToken: getForgeToken
         };
         var documentId = 'urn:' + getUrlParameter('urn');
 
         // Run this when the page is loaded
         Autodesk.Viewing.Initializer(options, function onInitialized(){
-            Autodesk.Viewing.Document.load(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
+            viewerApp = new Autodesk.Viewing.ViewingApplication('MyViewerDiv');
+            viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D);
+            viewerApp.loadDocument(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
         });
 
         /**
@@ -45,30 +48,17 @@
         * Proceeds with model initialization.
         */
         function onDocumentLoadSuccess(doc) {
-
-            // A document contains references to 3D and 2D geometries.
-            var geometries = doc.getRoot().search({'type':'geometry'});
-            if (geometries.length === 0) {
-                console.error('Document contains no geometries.');
+            // We could still make use of Document.getSubItemsWithProperties()
+            // However, when using a ViewingApplication, we have access to the **bubble** attribute,
+            // which references the root node of a graph that wraps each object from the Manifest JSON.
+            var viewables = viewerApp.bubble.search({'type':'geometry'});
+            if (viewables.length === 0) {
+                console.error('Document contains no viewables.');
                 return;
             }
 
-            // Choose any of the avialable geometries
-            var initGeom = geometries[0];
-
-            // Create Viewer instance
-            var viewerDiv = document.getElementById('MyViewerDiv');
-            var config = {
-                extensions: initGeom.extensions() || []
-            };
-            viewerApp = new Autodesk.Viewing.Private.GuiViewer3D(viewerDiv, config);
-
-            // Load the chosen geometry
-            var svfUrl = doc.getViewablePath(initGeom);
-            var modelOptions = {
-                sharedPropertyDbPath: doc.getPropertyDbPath()
-            };
-            viewerApp.start(svfUrl, modelOptions, onLoadModelSuccess, onLoadModelError);
+            // Choose any of the avialble viewables
+            viewerApp.selectItem(viewables[0].data, onItemLoadSuccess, onItemLoadFail);
         }
 
         // Get Query string from URL,
@@ -81,10 +71,10 @@
         }
 
         // Get public access token for read only,
-        // using ajax to access route /token in the background
+        // using ajax to access route /api/forge/oauth/public in the background
         function getForgeToken(callback) {
             jQuery.ajax({
-                url: '/token',
+                url: '/api/forge/oauth/public',
                 success: function (res) {
                     callback(res.access_token, res.expires_in);
                 }
@@ -92,28 +82,32 @@
         }
         
         /**
-            * viewerApp.loadDocument() failuire callback.
-            */
+        * viewerApp.loadDocument() failuire callback.
+        */
         function onDocumentLoadFailure(viewerErrorCode) {
             console.error('onDocumentLoadFailure() - errorCode:' + viewerErrorCode);
             jQuery('#MyViewerDiv').html('<p>There is an error loading the file. Please try refreshing the page.</p>');
         }
 
         /**
-            * viewerApp.selectItem() success callback.
-            * Invoked after the model's SVF has been initially loaded.
-            * It may trigger before any geometry has been downloaded and displayed on-screen.
-            */
-        function onLoadModelSuccess(model) {
-            console.log('onLoadModelSuccess()!');
-            console.log('Validate model loaded: ' + (viewerApp.model === model));
+        * viewerApp.selectItem() success callback.
+        * Invoked after the model's SVF has been initially loaded.
+        * It may trigger before any geometry has been downloaded and displayed on-screen.
+        */
+        function onItemLoadSuccess(viewer, item) {
+            console.log('onItemLoadSuccess()!');
+            console.log(viewer);
+            console.log(item);
+
+            // Congratulations! The viewer is now ready to be used.
+            console.log('Viewers are equal: ' + (viewer === viewerApp.getCurrentViewer()));
         }
 
         /**
-            * viewerApp.selectItem() failure callback.
-            * Invoked when there's an error fetching the SVF file.
-            */
-        function onLoadModelError(viewerErrorCode) {
+        * viewerApp.selectItem() failure callback.
+        * Invoked when there's an error fetching the SVF file.
+        */
+        function onItemLoadFail(viewerErrorCode) {
             console.error('onLoadModelError() - errorCode:' + viewerErrorCode);
             jQuery('#MyViewerDiv').html('<p>There is an error fetching the translated SVF file. Please try refreshing the page.</p>');
         }

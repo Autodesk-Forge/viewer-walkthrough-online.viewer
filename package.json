@@ -1,10 +1,10 @@
 {
-  "name": "learn.2legged.auth",
-  "version": "1.0.0",
-  "description": "Learn Two-Legged Authentication",
+  "name": "viewer-walkthrough-online.viewer",
+  "version": "2.0.0",
+  "description": "Code sample for the Forge Viewer API",
   "main": "start.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node start.js"
   },
   "keywords": [
     "2-legged",
@@ -14,7 +14,7 @@
     "tutorial",
     "sample"
   ],
-  "author": "Andrews Ang",
+  "author": "Autodesk (www.autodesk.com)",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
