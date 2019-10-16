@@ -12,8 +12,8 @@
     <!-- Third Party package -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <!-- Autodesk Forge Viewer files (IMPORTANT) -->
-    <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/style.min.css" type="text/css">
-    <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/viewer3D.min.js"></script>
+    <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.min.css" type="text/css">
+    <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>
     <style>
         /** Just simple CSS styling to make this page a little nicer **/
         body {
@@ -28,7 +28,7 @@
     <div id="MyViewerDiv"></div>
     <!-- Custom script -->
     <script>
-        var viewerApp;
+        var viewer;
         var options = {
             env: 'AutodeskProduction',
             api: 'derivativeV2', // TODO: for models uploaded to EMEA change this option to 'derivativeV2_EU'
@@ -38,9 +38,15 @@
 
         // Run this when the page is loaded
         Autodesk.Viewing.Initializer(options, function onInitialized(){
-            viewerApp = new Autodesk.Viewing.ViewingApplication('MyViewerDiv');
-            viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D);
-            viewerApp.loadDocument(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
+            // Find the element where the 3d viewer will live.    
+            var htmlElement = document.getElementById('MyViewerDiv');
+            if (htmlElement) {
+                // Create and start the viewer in that element    
+                viewer = new Autodesk.Viewing.GuiViewer3D(htmlElement);
+                viewer.start();
+                // Load the document into the viewer.
+                Autodesk.Viewing.Document.load(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
+            }
         });
 
         /**
@@ -48,17 +54,27 @@
         * Proceeds with model initialization.
         */
         function onDocumentLoadSuccess(doc) {
-            // We could still make use of Document.getSubItemsWithProperties()
-            // However, when using a ViewingApplication, we have access to the **bubble** attribute,
+            // Load the default viewable geometry into the viewer.
+            // Using the doc, we have access to the root BubbleNode,
             // which references the root node of a graph that wraps each object from the Manifest JSON.
-            var viewables = viewerApp.bubble.search({'type':'geometry'});
-            if (viewables.length === 0) {
-                console.error('Document contains no viewables.');
-                return;
+            var viewable = doc.getRoot().getDefaultGeometry();
+            if (viewable) {
+                viewer.loadDocumentNode(doc, viewable).then(function(result) {
+                    console.log('Viewable Loaded!');
+                }).catch(function(err) {
+                    console.log('Viewable failed to load.');
+                    console.log(err);
+                }
+              )
             }
+        }
 
-            // Choose any of the avialble viewables
-            viewerApp.selectItem(viewables[0].data, onItemLoadSuccess, onItemLoadFail);
+        /**
+        * Autodesk.Viewing.Document.load() failure callback.
+        */
+        function onDocumentLoadFailure(viewerErrorCode) {
+            console.error('onDocumentLoadFailure() - errorCode: ' + viewerErrorCode);
+            jQuery('#MyViewerDiv').html('<p>Translation in progress... Please try refreshing the page.</p>');
         }
 
         // Get Query string from URL,
@@ -81,36 +97,6 @@
             });
         }
         
-        /**
-        * viewerApp.loadDocument() failuire callback.
-        */
-        function onDocumentLoadFailure(viewerErrorCode) {
-            console.error('onDocumentLoadFailure() - errorCode:' + viewerErrorCode);
-            jQuery('#MyViewerDiv').html('<p>Translation in progress... Please try refreshing the page.</p>');
-        }
-
-        /**
-        * viewerApp.selectItem() success callback.
-        * Invoked after the model's SVF has been initially loaded.
-        * It may trigger before any geometry has been downloaded and displayed on-screen.
-        */
-        function onItemLoadSuccess(viewer, item) {
-            console.log('onItemLoadSuccess()!');
-            console.log(viewer);
-            console.log(item);
-
-            // Congratulations! The viewer is now ready to be used.
-            console.log('Viewers are equal: ' + (viewer === viewerApp.getCurrentViewer()));
-        }
-
-        /**
-        * viewerApp.selectItem() failure callback.
-        * Invoked when there's an error fetching the SVF file.
-        */
-        function onItemLoadFail(viewerErrorCode) {
-            console.error('onLoadModelError() - errorCode:' + viewerErrorCode);
-            jQuery('#MyViewerDiv').html('<p>There is an error fetching the translated SVF file. Please try refreshing the page.</p>');
-        }
   </script>
 </body>
 
