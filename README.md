@@ -8,7 +8,7 @@
 [![oAuth2](https://img.shields.io/badge/oAuth2-v1-green.svg)](https://forge.autodesk.com/)
 [![Data-Management](https://img.shields.io/badge/Data%20Management-v2-green.svg)](https://forge.autodesk.com/)
 [![Model-Derivative](https://img.shields.io/badge/Model%20Derivative-v2-green.svg)](https://forge.autodesk.com/)
-[![Viewer](https://img.shields.io/badge/Viewer-v6-green.svg)](https://forge.autodesk.com/)
+[![Viewer](https://img.shields.io/badge/Viewer-v7-green.svg)](https://forge.autodesk.com/)
 
 # Description
 This sample is part of the [Online Viewer Walkthrough](https://forge.autodesk.com/developer/learn/viewer-app).
