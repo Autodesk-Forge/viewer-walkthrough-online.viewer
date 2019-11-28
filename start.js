@@ -46,6 +46,9 @@ var access_token = '';
 var scopes = 'data:read data:write data:create bucket:create bucket:read';
 const querystring = require('querystring');
 
+Axios.defaults.maxContentLength = Infinity;
+Axios.defaults.maxBodyLength = Infinity;
+
 // // Route /api/forge/oauth
 app.get('/api/forge/oauth', function (req, res) {
     Axios({
