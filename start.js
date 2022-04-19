@@ -131,6 +131,7 @@ app.get('/api/forge/datamanagement/bucket/create', function (req, res) {
             if (error.response && error.response.status == 409) {
                 console.log('Bucket already exists, skip creation.');
                 res.redirect('/api/forge/datamanagement/bucket/detail');
+                return;
             }
             // Failed
             console.log(error);
