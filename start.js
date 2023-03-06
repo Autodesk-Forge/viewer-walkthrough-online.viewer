@@ -45,7 +45,7 @@ var FORGE_CLIENT_SECRET = process.env.FORGE_CLIENT_SECRET;
 var access_token = '';
 var scopes = 'data:read data:write data:create bucket:create bucket:read';
 const querystring = require('querystring');
-
+  app.get("/", (req, res)=>{res.send("hello 👋 im working")}) 
 // // Route /api/forge/oauth
 app.get('/api/forge/oauth', function (req, res) {
     Axios({
